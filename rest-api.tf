@@ -54,8 +54,7 @@ resource "aws_api_gateway_integration" "name" {
     EOF
   }
   request_parameters = {
-    "method.request.header.password" = false
-  }
+    "integration.request.header.password" = "method.request.querystring.password"
 
 }
 
@@ -63,29 +62,19 @@ resource "aws_api_gateway_model" "name" {
   rest_api_id  = aws_api_gateway_rest_api.name.id
   name         = "name"
   content_type = "application/json"
-  schema       = <<EOF
-  {
-  '$schema': 'http://json-schema.org/draft-04/schema#',
-   title: 'name',
-   type: 'object',
-   properties: {
-    HomeDirectory: {
-      type: 'string'
-    },
-    Role: {
-      type: 'string'
-    },
-    Policy: {
-      type: 'string'
-    },
-    PublicKey: {
-      type: 'array',
-      items: {
-        type: 'string'
+  schema       =  jsonencode({
+    type = "object"
+    properties = {
+      username = {
+        type = "string"
       }
-    },
-   }
-  }
-  EOF
+      password = {
+        type = "string"
+      }
+      serverId = {
+        type = "string"
+      }
+    }
+  })
 
 }
