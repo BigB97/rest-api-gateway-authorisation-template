@@ -45,6 +45,9 @@ resource "aws_api_gateway_method" "name" {
     }
     method_responses {
       status_code = 200
+      response_models = {
+        "application/json" = aws_api_gateway_model.name.name
+      }
     }
   }
 }
@@ -56,18 +59,26 @@ resource "aws_api_gateway_model" "name" {
   content_type = "application/json"
   schema       = <<EOF
   {
-    "type": "object",
-    "properties": {
-      "username": {
-        "type": "string"
-      },
-      "password": {
-        "type": "string"
-      },
-      "serverId": {
-        "type": "string"
+  '$schema': 'http://json-schema.org/draft-04/schema#',
+   title: 'name',
+   type: 'object',
+   properties: {
+    HomeDirectory: {
+      type: 'string'
+    },
+    Role: {
+      type: 'string'
+    },
+    Policy: {
+      type: 'string'
+    },
+    PublicKey: {
+      type: 'array',
+      items: {
+        type: 'string'
       }
-    }
+    },
+   }
   }
   EOF
 
